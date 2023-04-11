@@ -1,5 +1,4 @@
-com/backend/springboot/Parser/RetrieveTrades.class
-com/backend/springboot/Application$1.class
-com/backend/springboot/DBconnector/DBConnector.class
-com/backend/springboot/controllers/UserController.class
-com/backend/springboot/handlers/UserHandler.class
+com\backend\springboot\Application$1.class
+com\backend\springboot\controllers\UserController.class
+com\backend\springboot\handlers\UserHandler.class
+com\backend\springboot\Parser\RetrieveTrades.class

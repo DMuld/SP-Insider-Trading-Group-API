@@ -1,6 +1,8 @@
-/Users/dev/Desktop/School/Software Engineering/TeamProject/SP-Insider-Trading-Group-API/src/main/java/com/backend/springboot/DBconnector/DBConnector.java
-/Users/dev/Desktop/School/Software Engineering/TeamProject/SP-Insider-Trading-Group-API/src/main/java/com/backend/springboot/handlers/UserHandler.java
-/Users/dev/Desktop/School/Software Engineering/TeamProject/SP-Insider-Trading-Group-API/src/main/java/com/backend/springboot/Application.java
-/Users/dev/Desktop/School/Software Engineering/TeamProject/SP-Insider-Trading-Group-API/src/main/java/com/backend/springboot/Parser/RetrieveTrades.java
-/Users/dev/Desktop/School/Software Engineering/TeamProject/SP-Insider-Trading-Group-API/src/main/java/com/backend/springboot/controllers/HelloController.java
-/Users/dev/Desktop/School/Software Engineering/TeamProject/SP-Insider-Trading-Group-API/src/main/java/com/backend/springboot/controllers/UserController.java
+C:\Users\Maxtr\git\SP-Insider-Trading-Group-API\src\main\java\com\backend\springboot\database\DBConnector.java
+C:\Users\Maxtr\git\SP-Insider-Trading-Group-API\src\main\java\com\backend\springboot\controllers\UserController.java
+C:\Users\Maxtr\git\SP-Insider-Trading-Group-API\src\main\java\com\backend\springboot\controllers\HelloController.java
+C:\Users\Maxtr\git\SP-Insider-Trading-Group-API\src\main\java\com\backend\springboot\Parser\RetrieveTrades.java
+C:\Users\Maxtr\git\SP-Insider-Trading-Group-API\src\main\java\com\backend\springboot\handlers\UserHandler.java
+C:\Users\Maxtr\git\SP-Insider-Trading-Group-API\src\main\java\com\backend\springboot\database\UserRepository.java
+C:\Users\Maxtr\git\SP-Insider-Trading-Group-API\src\main\java\com\backend\springboot\Application.java
+C:\Users\Maxtr\git\SP-Insider-Trading-Group-API\src\main\java\com\backend\springboot\database\User.java

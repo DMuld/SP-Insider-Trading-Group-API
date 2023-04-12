@@ -25,6 +25,7 @@ public class UserHandler {
     }
 
     public String createUser(String userName, String hashedPassword, UserRepository userRepository) {
+    	// TODO: Check to make sure user doesn't already exist
     	User u = new User();
     	u.setEmail(userName);
     	u.setPasswordHash(hashedPassword);
@@ -32,7 +33,7 @@ public class UserHandler {
     	
     	System.out.println("Created user " + userName);
     	
-    	return "Created user " + userName;
+    	return "Created user";
     }
 
     public String updateUser(String userName, String newHashedPassword, UserRepository userRepository) {

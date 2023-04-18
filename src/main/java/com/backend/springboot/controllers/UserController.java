@@ -9,7 +9,7 @@ import com.backend.springboot.handlers.UserHandler;
 @RestController
 public class UserController {
 	@Autowired
-	private UserRepository userRepository;
+    private UserRepository userRepository;
 	
 
     @GetMapping("/getUser")

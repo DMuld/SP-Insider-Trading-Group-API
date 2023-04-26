@@ -21,5 +21,15 @@ public class TradeController {
 
     //Possible add setTrades
 
-    //Possible add getSpecificTrade
+    @GetMapping("/getTradeByKeyword")
+    public String getTradeByKeyword(@RequestParam(value = "key")String key) {
+    	TradeHandler response = new TradeHandler();
+    	return String.format(response.getTradeByKeyword(tradeRepository, key));
+    }
+    
+    @GetMapping("/getTradesByFavorites")
+    public String getTradesByFavorites(@RequestParam(value = "favorites")String favorites) {
+    	TradeHandler response = new TradeHandler();
+    	return String.format(response.getTradeByFavorites(tradeRepository, favorites));
+    }
 }

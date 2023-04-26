@@ -15,6 +15,8 @@ public class User {
 	
 	private String passwordHash;
 	
+	private String favorites;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -37,5 +39,13 @@ public class User {
 	
 	public void setPasswordHash(String passwordHash) {
 		this.passwordHash = passwordHash;
+	}
+	
+	public String getFavorites() {
+		return favorites;
+	}
+	
+	public void setFavorites(String favorites) {
+		this.favorites = favorites;
 	}
 }

@@ -36,4 +36,9 @@ public class UserController {
         return String.format(response.createUser(userName, newHashedPassword, userRepository));
     }
 
+    @GetMapping("/updateFavorites")
+    public String updateFavorites(@RequestParam(value = "name")String userName, @RequestParam(value = "favorites")String favorites) {
+    	UserHandler response = new UserHandler();
+    	return String.format(response.updateFavorites(userName, favorites, userRepository));
+    }
 }

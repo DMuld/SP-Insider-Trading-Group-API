@@ -1,6 +1,10 @@
+C:\Users\Maxtr\git\SP-Insider-Trading-Group-API\src\main\java\com\backend\springboot\handlers\TradeHandler.java
 C:\Users\Maxtr\git\SP-Insider-Trading-Group-API\src\main\java\com\backend\springboot\database\DBConnector.java
 C:\Users\Maxtr\git\SP-Insider-Trading-Group-API\src\main\java\com\backend\springboot\controllers\UserController.java
 C:\Users\Maxtr\git\SP-Insider-Trading-Group-API\src\main\java\com\backend\springboot\controllers\HelloController.java
+C:\Users\Maxtr\git\SP-Insider-Trading-Group-API\src\main\java\com\backend\springboot\controllers\TradeController.java
+C:\Users\Maxtr\git\SP-Insider-Trading-Group-API\src\main\java\com\backend\springboot\database\TradeRepository.java
+C:\Users\Maxtr\git\SP-Insider-Trading-Group-API\src\main\java\com\backend\springboot\database\Trade.java
 C:\Users\Maxtr\git\SP-Insider-Trading-Group-API\src\main\java\com\backend\springboot\Parser\RetrieveTrades.java
 C:\Users\Maxtr\git\SP-Insider-Trading-Group-API\src\main\java\com\backend\springboot\handlers\UserHandler.java
 C:\Users\Maxtr\git\SP-Insider-Trading-Group-API\src\main\java\com\backend\springboot\database\UserRepository.java

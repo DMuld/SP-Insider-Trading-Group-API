@@ -84,7 +84,12 @@ public class UserHandler {
     }
 
     public String updateUser(String userName, String newHashedPassword, UserRepository userRepository) {
-        //Need to make it take user input.
+    	User user = getUserObj(userName, userRepository);
+    	
+    	user.setPasswordHash(newHashedPassword);
+    	
+    	userRepository.save(user);
+    	
         return "User Password Changed";
     }
 

@@ -1,11 +1,16 @@
 package com.backend.springboot.Parser;
 
 import com.backend.springboot.database.Trade;
-import jakarta.persistence.criteria.CriteriaBuilder;
+import com.backend.springboot.database.TradeRepository;
+import com.backend.springboot.handlers.TradeHandler;
+import com.backend.springboot.handlers.UserHandler;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Locale;
 import java.util.Scanner;
 import java.util.regex.*;
 import java.io.*;
@@ -14,15 +19,17 @@ import java.nio.channels.ReadableByteChannel;
 import java.lang.*;
 import java.net.URL;
 
+@RestController
 public class RetrieveTrades {
 
-    static String ScheduleB = "S\u0000\u0000\u0000\u0000\u0000\u0000\u0000 B: T\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000";
-    static Pattern pattern = Pattern.compile("\\]");
-    static Matcher matcher;
-    static Pattern monthPattern = Pattern.compile("\\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\\b");
-    static int idCounter = 30;
+    String ScheduleB = "S\u0000\u0000\u0000\u0000\u0000\u0000\u0000 B: T\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000";
+    Pattern pattern = Pattern.compile("\\]");
+    Matcher matcher;
+    @Autowired
+    TradeRepository tradeRepository;
 
-    public static void main(String[] args) throws Exception {
+    @GetMapping("/getTrades")
+    public void getTrades() throws Exception {
 
         /*
         This first section read from the txt file and get all doc ID's that are of filing type C and T as those
@@ -32,7 +39,6 @@ public class RetrieveTrades {
         String url = "https://disclosures-clerk.house.gov/public_disc/financial-pdfs/2023/";
         Scanner scanner = new Scanner(file);
         scanner.nextLine();
-
 
         while (scanner.hasNext()) {
             String fileName = "";
@@ -86,7 +92,7 @@ public class RetrieveTrades {
         }
     }
 
-    static void fileReaderA(String fileName, String docID, String dateReported, String lastName) throws IOException {
+    private void fileReaderA(String fileName, String docID, String dateReported, String lastName) throws IOException {
 
         System.out.println("***********ASSETS**********");
         if (docID.charAt(0) == '8'){
@@ -169,7 +175,7 @@ public class RetrieveTrades {
         }
     }
 
-    static void fileReaderB(Scanner pdfScanner, String lastName, String reportDate) throws IOException {
+    private  void fileReaderB(Scanner pdfScanner, String lastName, String reportDate) throws IOException {
         String AccountName = pdfScanner.nextLine();
         if (AccountName.equals("None disclosed.")){
             System.out.println("NONE DISCLOSED");
@@ -257,14 +263,13 @@ public class RetrieveTrades {
                 float price = getStockPrice(ticker, date);
                 if (price != -1) {
                     System.out.printf("Account Name: %s. Date: %s. %s. Amount: %s. -> %s. Stock Price: %.2f\n", AccountName, date, sale, amount, size, price);
-                    dbConnector( lastName + idCounter, ticker, reportDate, date, sale, size, price);
-                    idCounter++;
+                    dbConnector(ticker, reportDate, date, sale, size, price);
                 }
             }
         }
     }
 
-    static String formatAssetValue(String assetValues){
+    private  String formatAssetValue(String assetValues){
 
         if (assetValues.equals("THROW CASE")) return assetValues;
         int dollarSigns = 0;
@@ -278,21 +283,21 @@ public class RetrieveTrades {
         return "$1 - $1000";
     }
 
-    static String getType(String name){
+    private  String getType(String name){
         for (int i = 0; i < name.length(); i++) {
             if (name.charAt(i) == '[') return name.substring(i, name.length());
         }
         return name;
     }
 
-    static String formatAssetName(String name){
+    private  String formatAssetName(String name){
         for (int i = 0; i < name.length(); i++) {
             if (name.charAt(i) == '[') return name.substring(0, i - 1);
         }
         return name;
     }
 
-    static String getStockAbbreviation(String name){
+    private  String getStockAbbreviation(String name){
 
         if (name.equals("")) return "NOT A STOCK";
 
@@ -309,7 +314,8 @@ public class RetrieveTrades {
         return abbr;
     }
 
-    static void dbConnector(String id, String ticker, String published, String traded, String type, int size, float price) throws IOException {
+
+    private  void dbConnector(String ticker, String published, String traded, String type, int size, float price) {
 
         Trade trade = new Trade();
         trade.setTICKER(ticker);
@@ -319,9 +325,14 @@ public class RetrieveTrades {
         trade.setTYPE(type);
         trade.setVOLUME(size);
         trade.setPRICE(price);
+        tradeRepository.save(trade);
+
+        TradeHandler response = new TradeHandler();
+        //return String.format(response.getTrades(ticker, published, traded, subtractDates(published, traded), type, size, price));
+
     }
 
-    static int sizeFloor(String size){
+    private  int sizeFloor(String size){
         int dollar = 0;
         String amount = "";
         for (int i =0; i < size.length(); i++){
@@ -331,41 +342,32 @@ public class RetrieveTrades {
             if (size.charAt(i) == '$') dollar++;
 
         }
+        if (amount.equals("")) amount = "15000";
         return Integer.parseInt(amount);
     }
 
-    static int subtractDates(String pub, String traded){
+    private  int subtractDates(String pub, String traded){
 
         int month1 = 0;
         int month2 = 0;
         if (traded.charAt(0) == '1'){
             month2 = 10;
         }
-        if (traded.charAt(0) == '1'){
-            month1 = 10;
-        }
-        for(int i = 0; i < 10; i++){
-            if (traded.charAt(1) == i) month2 += i;
-            if (pub.charAt(1) == i) month1 += i;
-        }
+        month2 += (int)traded.charAt(1) - 48;
+        month1 += (int) pub.charAt(0) -48;
         int date1 = 0;
         int date2 = 0;
-        for(int i = 0; i < 3; i++){
-            if (traded.charAt(3) == i){
-                date2 = 10;
-            }
-            if (traded.charAt(3) == i){
-                date1 = 10;
-            }
-        }
-        for(int i = 0; i < 10; i++){
-            if (traded.charAt(4) == i) date2 += i;
-            if (pub.charAt(4) == i) date1 += i;
-        }
+        date2 = ((int)traded.charAt(3) - 48) * 10;
+        date1 = ((int) pub.charAt(2) - 48) * 10;
+        if (traded.charAt(4) == '/') date2 = date2 / 10;
+        else date2 += (int) traded.charAt(4) - 48;
+        if (traded.charAt(3) == '/') date1 = date1 / 10;
+        else date1 += (int)pub.charAt(3) - 48;
+
         int year1 = 0;
         int year2 = 0;
-        if (traded.charAt(10) == '3') year2 = 0;
-        if (pub.charAt(10) == '3') year1 = 356;
+        if (traded.charAt(traded.length() -1) == '3') year2 = 365;
+        if (pub.charAt(pub.length() -1) == '3') year1 = 365;
 
         year1 += (month1 * 30) + date1;
         year2 += (month2 * 30) + date2;
@@ -373,7 +375,7 @@ public class RetrieveTrades {
         return Math.abs(year2 - year1);
     }
 
-    static float getStockPrice(String ticker, String date) throws IOException{
+    private  float getStockPrice(String ticker, String date) throws IOException{
 
         if (!date.toLowerCase().equals(date.toUpperCase())) return -1;
         URL url = new URL("https://finance.yahoo.com/quote/" + ticker + "/history?p=" + ticker + "/");
@@ -464,6 +466,5 @@ public class RetrieveTrades {
         //System.out.println(put);
         return price;
     }
-
 }
 
